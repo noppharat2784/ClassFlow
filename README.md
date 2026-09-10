@@ -149,13 +149,20 @@ To execute the test suite:
 
 *(Visual walkthrough of the primary educator workflows)*
 
-| 1. Operational Dashboard | 2. Class Cohort Roster | 3. Weekly Progress Editor |
-|:---:|:---:|:---:|
-| *[Screenshot: Dashboard]* <br> `screenshots/01_dashboard.png` | *[Screenshot: Class Detail]* <br> `screenshots/02_class_detail.png` | *[Screenshot: Weekly Progress]* <br> `screenshots/03_weekly_progress.png` |
+### Operational Dashboard & Class Tracking
+| Operational Dashboard | Class Cohort Roster |
+|:---:|:---:|
+| <img src="screenshots/01_dashboard.png" width="280" alt="Operational Dashboard" /><br><sub>**Home Dashboard**: Priority intervention triage and active class summaries.</sub> | <img src="screenshots/02_class_detail.png" width="280" alt="Class Cohort Roster" /><br><sub>**Class Detail**: Current week pacing pointer and curriculum module timeline.</sub> |
 
-| 4. Student Learning Path | 5. SS1 Competency Assessment | 6. Project & Team Tracking |
-|:---:|:---:|:---:|
-| *[Screenshot: Student Detail]* <br> `screenshots/04_student_detail.png` | *[Screenshot: SS1 Assessment]* <br> `screenshots/05_assessment.png` | *[Screenshot: Project Detail]* <br> `screenshots/06_project_detail.png` |
+### Weekly Progress & Student Learning Path
+| Weekly Student Progress | Student Profile & Multi-Enrollment |
+|:---:|:---:|
+| <img src="screenshots/03_weekly_progress.png" width="280" alt="Weekly Student Progress" /><br><sub>**Weekly Progress**: Cohort progress checkpointing with status chips and blocker notes.</sub> | <img src="screenshots/04_student_detail.png" width="280" alt="Student Profile" /><br><sub>**Student Detail**: Multi-enrollment learning path, active context, and assessment overview.</sub> |
+
+### Competency Assessment & Studio Projects
+| SS1 Competency Assessment | Studio Projects & Teams |
+|:---:|:---:|
+| <img src="screenshots/05_assessment.png" width="280" alt="Competency Assessment" /><br><sub>**SS1 Assessment**: Five-domain competency radar chart, criterion scoring, and qualitative feedback.</sub> | <img src="screenshots/06_project_detail.png" width="280" alt="Studio Projects" /><br><sub>**Projects**: Team workspace, deliverable milestone filters, and overall progress health.</sub> |
 
 ---
 
