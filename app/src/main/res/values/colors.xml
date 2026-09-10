@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="indigo_primary">#3446A8</color>
+    <color name="indigo_primary_dark">#24347F</color>
+    <color name="soft_blue">#DDE7FF</color>
+    <color name="off_white">#F8F9FC</color>
+    <color name="slate_gray">#4E5969</color>
+    <color name="slate_light">#E3E7EF</color>
+    <color name="slate_dark">#1F242E</color>
+    <color name="white">#FFFFFF</color>
+
+    <color name="status_on_track">#2E7D4F</color>
+    <color name="status_needs_attention">#B26A00</color>
+    <color name="status_blocked">#BA1A1A</color>
+    <color name="status_completed">#315DA8</color>
+    <color name="status_not_started">#6F7785</color>
+    <color name="status_active_container">#D8F3E4</color>
+    <color name="status_attention_container">#FFF0D5</color>
+    <color name="status_blocked_container">#FFDAD6</color>
+    <color name="status_planned_container">#E6E9F0</color>
+    <color name="status_completed_container">#DDE7FF</color>
+    <color name="status_archived_container">#ECEEF2</color>
+</resources>

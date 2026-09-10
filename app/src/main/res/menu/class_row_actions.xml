@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/action_class_edit"
+        android:title="@string/edit" />
+    <item
+        android:id="@+id/action_class_activate"
+        android:title="@string/activate" />
+    <item
+        android:id="@+id/action_class_complete"
+        android:title="@string/mark_completed" />
+    <item
+        android:id="@+id/action_class_archive"
+        android:title="@string/archive" />
+    <item
+        android:id="@+id/action_class_restore"
+        android:title="@string/restore" />
+</menu>

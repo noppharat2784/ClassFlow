@@ -1,0 +1,60 @@
+# Built application files
+*.apk
+*.aar
+*.ap_
+*.aab
+
+# Files for the ART/Dalvik VM
+*.dex
+
+# Java class files
+*.class
+
+# Generated files
+bin/
+gen/
+out/
+build/
+app/build/
+
+# Gradle files
+.gradle/
+
+# Local configuration file (sdk.dir, etc.)
+local.properties
+
+# Android Studio / IntelliJ IDEA
+.idea/
+*.iml
+captures/
+.externalNativeBuild/
+.cxx/
+.DS_Store
+Thumbs.db
+
+# Firebase client config
+app/google-services.json
+
+# Signing & Secrets
+*.jks
+*.keystore
+*.p12
+*.pem
+.env
+.env.*
+key.properties
+signing.properties
+
+# Internal ClassFlow working material
+ClassFlow_01-05/
+ClassFlow_01-05.zip
+
+# AI / temporary artifacts
+.gemini/
+.antigravity/
+implementation_plan.md
+walkthrough.md
+*.log
+*.tmp
+*.bak
+

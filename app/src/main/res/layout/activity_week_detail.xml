@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/week_detail_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/week_detail_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/off_white"
+        android:title="@string/week_detail"
+        android:titleTextColor="@color/indigo_primary_dark" />
+    <FrameLayout android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1">
+        <ScrollView
+            android:id="@+id/week_detail_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fillViewport="true"
+            android:visibility="gone">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="20dp">
+                <TextView android:id="@+id/week_detail_title" android:layout_width="match_parent" android:layout_height="wrap_content" android:textAppearance="?attr/textAppearanceHeadlineMedium" android:textColor="@color/indigo_primary_dark" android:textStyle="bold" />
+                <TextView android:id="@+id/week_detail_summary" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="12dp" android:textAppearance="?attr/textAppearanceBodyLarge" android:textColor="@color/slate_gray" />
+                <TextView android:id="@+id/week_detail_phase" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="12dp" android:textColor="@color/indigo_primary" />
+                <TextView android:id="@+id/week_detail_progress_type" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="4dp" android:textColor="@color/indigo_primary" />
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    app:cardBackgroundColor="@color/soft_blue"
+                    app:cardElevation="0dp">
+                    <TextView android:id="@+id/week_detail_counts" android:layout_width="match_parent" android:layout_height="wrap_content" android:padding="14dp" android:textColor="@color/indigo_primary_dark" />
+                </com.google.android.material.card.MaterialCardView>
+                <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="20dp" android:text="@string/students" android:textAppearance="?attr/textAppearanceTitleLarge" android:textColor="@color/indigo_primary_dark" android:textStyle="bold" />
+                <HorizontalScrollView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="6dp" android:scrollbars="none">
+                    <com.google.android.material.chip.ChipGroup android:layout_width="wrap_content" android:layout_height="wrap_content" app:selectionRequired="true" app:singleLine="true" app:singleSelection="true">
+                        <com.google.android.material.chip.Chip android:id="@+id/week_status_all" style="@style/Widget.Material3.Chip.Filter" android:layout_width="wrap_content" android:layout_height="wrap_content" android:checked="true" android:text="@string/status_all" />
+                        <com.google.android.material.chip.Chip android:id="@+id/week_status_not_recorded" style="@style/Widget.Material3.Chip.Filter" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/status_not_recorded" />
+                        <com.google.android.material.chip.Chip android:id="@+id/week_status_not_started" style="@style/Widget.Material3.Chip.Filter" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/status_not_started" />
+                        <com.google.android.material.chip.Chip android:id="@+id/week_status_on_track" style="@style/Widget.Material3.Chip.Filter" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/status_on_track" />
+                        <com.google.android.material.chip.Chip android:id="@+id/week_status_needs_attention" style="@style/Widget.Material3.Chip.Filter" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/status_needs_attention" />
+                        <com.google.android.material.chip.Chip android:id="@+id/week_status_blocked" style="@style/Widget.Material3.Chip.Filter" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/status_blocked" />
+                        <com.google.android.material.chip.Chip android:id="@+id/week_status_completed" style="@style/Widget.Material3.Chip.Filter" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/status_completed" />
+                    </com.google.android.material.chip.ChipGroup>
+                </HorizontalScrollView>
+                <TextView android:id="@+id/week_detail_students_empty" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="8dp" android:textColor="@color/slate_gray" android:visibility="gone" />
+                <androidx.recyclerview.widget.RecyclerView android:id="@+id/week_detail_student_list" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="8dp" android:nestedScrollingEnabled="false" />
+            </LinearLayout>
+        </ScrollView>
+        <com.google.android.material.progressindicator.CircularProgressIndicator android:id="@+id/week_detail_loading" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_gravity="center" />
+        <LinearLayout android:id="@+id/week_detail_error" android:layout_width="match_parent" android:layout_height="match_parent" android:gravity="center" android:orientation="vertical" android:padding="28dp" android:visibility="gone">
+            <TextView android:id="@+id/week_detail_error_message" android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="center" android:textColor="@color/status_blocked" />
+            <com.google.android.material.button.MaterialButton android:id="@+id/week_detail_retry" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="16dp" android:text="@string/retry" />
+        </LinearLayout>
+    </FrameLayout>
+</LinearLayout>
