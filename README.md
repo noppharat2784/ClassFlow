@@ -41,22 +41,22 @@ Studio-based technology education poses unique operational challenges:
 - View multi-enrollment timelines with contextual weekly progress and historical assessments.
 
 ### ⏱️ Weekly Student Progress
-- Log weekly checkpoints (`ON_TRACK`, `NEEDS_ATTENTION`, `BLOCKED`, `COMPLETED`).
+- Log weekly individual progress checkpoints (`ON_TRACK`, `NEEDS_ATTENTION`, `BLOCKED`, `COMPLETED`).
 - Enforce mandatory blocker notes when a student is impeded.
-- Record dynamic rubric metrics customized per track.
+- Record dynamic rubric metrics customized per track/week.
 
 ### 🎯 SS1 Competency Assessment
 - Conduct structured evaluations across 5 foundational engineering domains:
-  1. Language Fundamentals
-  2. Algorithmic Thinking & Logic
-  3. Code Quality & Modularity
-  4. Debugging & Tooling
-  5. Studio Workflow & Professional Practice
+  1. Coding Foundation
+  2. Logic & Problem Solving
+  3. Build & Debug
+  4. Code Ownership & Explanation
+  5. Independence & Learning Growth
 - Dynamic runtime competence score calculation with qualitative narrative feedback (strengths and priority next steps).
 
 ### 🚀 Projects & Team Progress
-- Group enrolled students into project teams for studio project phases (Weeks 9–10 in SS1).
-- Track weekly project deliverables with atomic synchronization of the project's overall status.
+- Create class-linked project teams from eligible enrolled students.
+- Track weekly project progress with current-week summary synchronization.
 
 ### 🚨 Operational Dashboard (Intervention Center)
 - Priority intervention feed surfacing any `BLOCKED` or `NEEDS_ATTENTION` student or project across active cohorts.
@@ -82,7 +82,7 @@ ClassFlow follows a layered, lifecycle-aware architecture designed for transacti
   Firebase Authentication (Email/Password) & Cloud Firestore
 ```
 
-All activities requiring authenticated access inherit from `ProtectedActivity`, which enforces authentication gating before view inflation. Detail views implement sequence token guards to prevent stale asynchronous callbacks from corrupting UI state during rapid navigation.
+Protected activities inherit from `ProtectedActivity`, which checks the Firebase Auth session in `onStart` and redirects unauthenticated sessions to `LoginActivity` while clearing the task. Detail views implement sequence token guards to prevent stale asynchronous callbacks from corrupting UI state during rapid navigation.
 
 ---
 
@@ -94,11 +94,11 @@ The relationship between core entities reflects studio operations:
 TRACK (Curriculum Template, 10 Weeks)
   └── CLASS (Cohort Instance)
         ├── ENROLLMENT (Active / Completed / Withdrawn / Archived)
-        │     ├── STUDENT PROGRESS (Weeks 1–8 in SS1)
+        │     ├── STUDENT PROGRESS (Weekly Individual Mastery)
         │     └── ASSESSMENT (Embedded Rubric Evaluation)
         │
         └── PROJECT (Team Entity)
-              └── PROJECT PROGRESS (Weeks 9–10 in SS1)
+              └── PROJECT PROGRESS (Weekly Deliverables)
 
 OPERATIONAL DASHBOARD (Read-Derived View Model)
   └── Scoped Bounded Queries across Active Classes
@@ -134,10 +134,11 @@ OPERATIONAL DASHBOARD (Read-Derived View Model)
 ## 8. Testing
 
 The project includes verified automated and manual test suites:
-- **30 Unit Tests Passing**: Comprehensive unit tests covering data mapping, validation invariants, domain transactions, and assessment scoring logic.
+- **30 Unit Tests Passing**: 30 unit tests cover assessment calculation, dashboard derivation, learning-path summary behavior, and project-domain logic.
+- **`testDebugUnitTest` Passed**: All unit tests execute and pass cleanly.
 - **`assembleDebug` Passed**: Debug APK compiles and builds cleanly without warnings or errors.
 - **`lintDebug` Passed**: 0 Android lint errors.
-- **Human Smoke Test Passed**: Full Batch 6 human runtime acceptance testing verified on Android 15 emulator.
+- **Human Batch 6 Runtime Smoke Test Passed**: Full Batch 6 human runtime acceptance testing verified on Android 15 emulator.
 
 To execute the unit test suite:
 
@@ -222,8 +223,7 @@ To run ClassFlow against a live backend:
 
 ## 12. Project Status
 
-- **Baseline Status**: Core v1 functionality is complete and closed across all 8 development batches.
-- **Release State**: Development baseline established; repository is currently private and un-tagged.
+- **Core Status**: Core v1 functionality is complete and verified across all 8 development batches.
 - **Verification Summary**: Zero lint errors, 30 unit tests passing, clean debug build, human runtime acceptance passed.
 
 ---

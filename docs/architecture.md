@@ -39,13 +39,13 @@ HOME (Operational Dashboard)
 - **Deterministic Keying**: Enrollment documents use the deterministic ID format `{classId}_{studentId}`, preventing duplicate logical records in the same class.
 
 ### 3. Student Progress vs. Project Progress
-- **StudentProgress** (`studentProgress`): Evaluates individual student progress during foundational learning weeks (Weeks 1–8 in SS1). Document IDs follow `{classId}_{studentId}_{weekId}` (e.g., `2026_SS1_A_ST_002_W05`). Status options include `NOT_STARTED`, `ON_TRACK`, `NEEDS_ATTENTION`, `BLOCKED`, and `COMPLETED`.
-- **ProjectProgress** (`projectProgress`): Evaluates team deliverables during collaborative project and capstone weeks (Weeks 9–10 in SS1). Document IDs follow `{projectId}_{weekId}` (e.g., `proj_auto123_W09`).
+- **StudentProgress** (`studentProgress`): Evaluates weekly individual student progress using the dynamic metric schema for that Track/Week. Document IDs follow `{classId}_{studentId}_{weekId}` (e.g., `2026_SS1_A_ST_002_W05`). Status options include `NOT_STARTED`, `ON_TRACK`, `NEEDS_ATTENTION`, `BLOCKED`, and `COMPLETED`.
+- **ProjectProgress** (`projectProgress`): Evaluates weekly team deliverable progress using the milestone metric schema for that Track/Week. Document IDs follow `{projectId}_{weekId}` (e.g., `proj_auto123_W09`).
 
 ### 4. Competency Assessment
 - The **Assessment** record evaluates 15 criteria across 5 engineering domains for the SS1 curriculum.
 - In accordance with the single-source-of-truth principle, the assessment is embedded directly within the parent `Enrollment` document (`enrollments/{classId}_{studentId}.assessment`), ensuring transactional co-location with the enrollment record.
-- Persisted assessment attributes include `rubricId`, `criteria`, `strength`, `nextStep`, and `updatedAt`. Overall competence score, band level (e.g., `DEVELOPING`, `PROFICIENT`), and domain radar calculations remain dynamic runtime calculations.
+- Persisted assessment attributes include `rubricId` (`SS1_COMPETENCY_V1`), `criteria`, `strength`, `nextStep`, and `updatedAt`. Overall competence score, band level (`STRONG`, `READY`, `DEVELOPING`, `NEED SUPPORT`), and domain radar calculations remain dynamic runtime calculations.
 
 ---
 

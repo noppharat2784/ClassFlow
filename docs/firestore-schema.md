@@ -86,13 +86,13 @@ Associates a Student with a specific Class offering and hosts their competency a
   - `status` (string, required): Enrollment lifecycle (`"ACTIVE"`, `"COMPLETED"`, `"WITHDRAWN"`, `"ARCHIVED"`)
   - `enrolledAt` (timestamp, required): Enrollment creation timestamp
   - `assessment` (map, optional): Embedded rubric competency assessment data
-    - `rubricId` (string, required if assessed): Evaluated rubric identifier (e.g., `"ss1_v1"`)
+    - `rubricId` (string, required if assessed): Evaluated rubric identifier (`"SS1_COMPETENCY_V1"`)
     - `criteria` (map, required if assessed): Map of 15 criterion IDs to integer scores (`1` through `4`) or `"NOT_OBSERVED"`
     - `strength` (string, optional): Qualitative narrative on strong competencies
     - `nextStep` (string, optional): Qualitative guidance on priority areas for growth
     - `updatedAt` (timestamp, optional): Assessment timestamp
 
-> **Runtime-Only Fields**: Overall competence scores (e.g. `2.73`), competence band levels (`DEVELOPING`, `PROFICIENT`, etc.), and domain averages are calculated dynamically at runtime by `AssessmentCalculator` and are deliberately **not persisted** to avoid schema drift and stale calculations.
+> **Runtime-Only Fields**: Overall score and performance level are calculated dynamically at runtime by `AssessmentCalculator` and are not persisted.
 
 ---
 
