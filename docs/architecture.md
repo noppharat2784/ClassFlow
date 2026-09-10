@@ -11,11 +11,11 @@ ClassFlow is a specialized teaching operations tool built for **VU Tech Academy*
 ClassFlow organizes studio teaching operations into clear hierarchical domains:
 
 ```text
-TRACK (Curriculum Definition)
+TRACK (Curriculum Blueprint)
   └── CLASS (Operational Offering)
         ├── ENROLLMENT (Student Association & Status)
         │     ├── STUDENT PROGRESS (Weekly Status & Dynamic Metrics)
-        │     └── ASSESSMENT (Rubric Evaluation & Domain Scores)
+        │     └── ASSESSMENT (Embedded Rubric Evaluation)
         │
         └── PROJECT (Team Entity)
               └── PROJECT PROGRESS (Weekly Deliverables & Status Sync)
@@ -30,21 +30,22 @@ HOME (Operational Dashboard)
 ## Core Structural Invariants
 
 ### 1. Track vs. Class
-- **Track** (`tracks`): Represents the immutable curriculum blueprint (e.g., `ss1` - Python Foundations, `ss2` - Smart Systems). It defines the standard 12-week schedule, progression phases, milestones, dynamic metric schemas, and rubric criteria.
-- **Class** (`classes`): Represents an operational course offering (e.g., `2026_SS1_A`). A class instantiates a specific track, possesses independent lifecycle states (`PLANNED`, `ACTIVE`, `COMPLETED`, `ARCHIVED`), and maintains an independent `currentWeek` pointer.
+- **Track** (`tracks`): Represents the immutable curriculum blueprint (e.g., `ss1` - Python Foundations, `ss2` - Smart Systems). It defines the standard 10-week schedule (`W01`–`W10`), progression phases, dynamic metric schemas, and rubric criteria.
+- **Class** (`classes`): Represents an operational course offering (e.g., `2026_SS1_A`). A class instantiates a specific track, possesses independent lifecycle states (`PLANNED`, `ACTIVE`, `COMPLETED`, `ARCHIVED`), and maintains an independent `currentWeek` pointer (`1` to `10`).
 
 ### 2. Student Identity vs. Enrollment
 - **Student** (`students`): Represents permanent individual identity (`studentId`, `name`, `nickname`, `active`). A student exists independently of classes.
 - **Enrollment** (`enrollments`): Represents the contractual association between a Student and a Class. A single student may hold multiple historical enrollments across different terms and tracks.
-- **Deterministic Keying**: Enrollment documents use the deterministic ID format `${classId}_${studentId}`, preventing duplicate logical records in the same class.
+- **Deterministic Keying**: Enrollment documents use the deterministic ID format `{classId}_{studentId}`, preventing duplicate logical records in the same class.
 
 ### 3. Student Progress vs. Project Progress
-- **StudentProgress** (`studentProgress`): Evaluates individual mastery during learning weeks (Weeks 1–7). Document IDs follow `${classId}_${weekNumber}_${studentId}`. Status options include `ON_TRACK`, `NEEDS_ATTENTION`, `BLOCKED`, and `COMPLETED`.
-- **ProjectProgress** (`projectProgress`): Evaluates team deliverables during project weeks (Weeks 8–12). Document IDs follow `${projectId}_${weekNumber}`.
+- **StudentProgress** (`studentProgress`): Evaluates individual student progress during foundational learning weeks (Weeks 1–8 in SS1). Document IDs follow `{classId}_{studentId}_{weekId}` (e.g., `2026_SS1_A_ST_002_W05`). Status options include `NOT_STARTED`, `ON_TRACK`, `NEEDS_ATTENTION`, `BLOCKED`, and `COMPLETED`.
+- **ProjectProgress** (`projectProgress`): Evaluates team deliverables during collaborative project and capstone weeks (Weeks 9–10 in SS1). Document IDs follow `{projectId}_{weekId}` (e.g., `proj_auto123_W09`).
 
 ### 4. Competency Assessment
 - The **Assessment** record evaluates 15 criteria across 5 engineering domains for the SS1 curriculum.
-- In accordance with the single-source-of-truth principle, the assessment is embedded directly within the parent `Enrollment` document (`enrollments/${classId}_${studentId}.assessment`), ensuring transactional co-location with the enrollment record.
+- In accordance with the single-source-of-truth principle, the assessment is embedded directly within the parent `Enrollment` document (`enrollments/{classId}_{studentId}.assessment`), ensuring transactional co-location with the enrollment record.
+- Persisted assessment attributes include `rubricId`, `criteria`, `strength`, `nextStep`, and `updatedAt`. Overall competence score, band level (e.g., `DEVELOPING`, `PROFICIENT`), and domain radar calculations remain dynamic runtime calculations.
 
 ---
 
@@ -52,10 +53,10 @@ HOME (Operational Dashboard)
 
 ### 1. Transaction-Guarded Writes
 All critical state mutations utilize Cloud Firestore transactions (`runTransaction`):
-- **Class Week Advancement**: Validates track bounds before incrementing `currentWeek`.
+- **Class Week Advancement**: Validates track bounds before updating `currentWeek`.
 - **Enrollment Status Changes**: Enforces valid lifecycle transitions (`ACTIVE`, `COMPLETED`, `WITHDRAWN`, `ARCHIVED`).
 - **Student Progress**: Ensures active enrollment exists and validates that `blocker` descriptions accompany any `BLOCKED` status.
-- **Assessment Scoring**: Enforces all 15 rubric criteria, ensuring valid 1–4 integer ranges and calculating aggregate domain levels.
+- **Assessment Scoring**: Enforces valid rubric criterion scoring (integers 1–4 or `NOT_OBSERVED`).
 
 ### 2. Zero-Cascade Lifecycle Protection
 - Archiving a Student (`student.active = false`) never cascades destructive changes to historical enrollments, past progress, or existing project memberships.
@@ -75,7 +76,7 @@ All critical state mutations utilize Cloud Firestore transactions (`runTransacti
 
 ### 6. Read-Derived Operational Dashboard
 - The Home Dashboard does not query a synthetic "dashboard" collection.
-- It derives the **Priority Intervention Feed** and class summaries dynamically from bounded queries scoped to active classes and current-week operational records.
+- It derives the **Priority Intervention Feed** and class summaries dynamically from bounded queries scoped to active classes and current-week operational records, with automatic refresh on screen resume (`onResume`).
 
 ### 7. Stale Async Generation Protection
 - Detail screens (such as `StudentDetailActivity` and `ProjectDetailActivity`) enforce an atomic request sequence token or lifecycle checks.

@@ -31,7 +31,9 @@ Studio-based technology education poses unique operational challenges:
 ## 3. Core Features
 
 ### 📋 Curriculum Tracks & Course Offerings
-- Browse standardized curriculum blueprints (**SS1 — Python Foundations**, **SS2 — Smart Systems**).
+- Standardized 10-week curriculum blueprints:
+  - **SS1 — Python Foundations** (Weeks 1–8: Foundation/Learning, Week 9: Capstone/Project, Week 10: Demo Day).
+  - **SS2 — Smart Systems** (Weeks 1–4: Data & Decision, Week 5: Connected Device, Weeks 6–8: App & Cloud, Week 9: Smart System Integration, Week 10: Demo Day).
 - Manage operational class cohorts (`PLANNED`, `ACTIVE`, `COMPLETED`, `ARCHIVED`) with independent `currentWeek` pacing pointers.
 
 ### 👥 Student Profiles & Multi-Enrollment Learning Paths
@@ -41,7 +43,7 @@ Studio-based technology education poses unique operational challenges:
 ### ⏱️ Weekly Student Progress
 - Log weekly checkpoints (`ON_TRACK`, `NEEDS_ATTENTION`, `BLOCKED`, `COMPLETED`).
 - Enforce mandatory blocker notes when a student is impeded.
-- Record dynamic rubric metrics customized per track (e.g., syntax familiarity, algorithmic logic, version control).
+- Record dynamic rubric metrics customized per track.
 
 ### 🎯 SS1 Competency Assessment
 - Conduct structured evaluations across 5 foundational engineering domains:
@@ -50,21 +52,21 @@ Studio-based technology education poses unique operational challenges:
   3. Code Quality & Modularity
   4. Debugging & Tooling
   5. Studio Workflow & Professional Practice
-- Automated scoring calculation with qualitative narrative feedback (strengths and priority next steps).
+- Dynamic runtime competence score calculation with qualitative narrative feedback (strengths and priority next steps).
 
 ### 🚀 Projects & Team Progress
-- Group enrolled students into project teams for studio project phases (Weeks 8–12).
+- Group enrolled students into project teams for studio project phases (Weeks 9–10 in SS1).
 - Track weekly project deliverables with atomic synchronization of the project's overall status.
 
 ### 🚨 Operational Dashboard (Intervention Center)
-- Real-time priority intervention feed surfacing any `BLOCKED` or `NEEDS_ATTENTION` student or project across active cohorts.
+- Priority intervention feed surfacing any `BLOCKED` or `NEEDS_ATTENTION` student or project across active cohorts.
 - High-level class health cards enabling immediate deep-dives into at-risk cohorts.
 
 ---
 
 ## 4. Architecture
 
-ClassFlow follows a layered, lifecycle-aware architecture designed for robust offline-first and transaction-safe mobile operations:
+ClassFlow follows a layered, lifecycle-aware architecture designed for transaction-safe mobile operations:
 
 ```text
 [ Presentation Layer ]
@@ -89,16 +91,16 @@ All activities requiring authenticated access inherit from `ProtectedActivity`, 
 The relationship between core entities reflects studio operations:
 
 ```text
-TRACK (Curriculum Template)
+TRACK (Curriculum Template, 10 Weeks)
   └── CLASS (Cohort Instance)
         ├── ENROLLMENT (Active / Completed / Withdrawn / Archived)
-        │     ├── STUDENT PROGRESS (Weeks 1–7)
-        │     └── ASSESSMENT (SS1 Rubric)
+        │     ├── STUDENT PROGRESS (Weeks 1–8 in SS1)
+        │     └── ASSESSMENT (Embedded Rubric Evaluation)
         │
         └── PROJECT (Team Entity)
-              └── PROJECT PROGRESS (Weeks 8–12)
+              └── PROJECT PROGRESS (Weeks 9–10 in SS1)
 
-OPERATIONAL DASHBOARD (Derived View Model)
+OPERATIONAL DASHBOARD (Read-Derived View Model)
   └── Scoped Bounded Queries across Active Classes
         └── Priority Intervention Feed
 ```
@@ -107,11 +109,11 @@ OPERATIONAL DASHBOARD (Derived View Model)
 
 ## 6. Key Engineering Decisions
 
-- **Deterministic Document IDs**: Enrollments use `${classId}_${studentId}` and Student Progress records use `${classId}_${weekNumber}_${studentId}`. This helps prevent duplicate logical records and simplifies direct document referencing.
+- **Deterministic Document IDs**: Enrollments use `{classId}_{studentId}`, Student Progress records use `{classId}_{studentId}_{weekId}`, and Project Progress records use `{projectId}_{weekId}`. This helps prevent duplicate logical records and simplifies direct document referencing.
 - **Transaction-Guarded Writes**: Critical mutations—such as advancing class weeks, changing enrollment statuses, updating progress with blockers, and saving assessments—execute within Cloud Firestore transactions (`runTransaction`) to preserve data consistency.
 - **Zero-Cascade Policy**: Archiving a student or class never triggers cascading deletions or mutations to historical enrollments, progress entries, or project memberships.
 - **UI-Only `NOT_RECORDED` State**: Missing weekly submissions are treated as an operational state in the UI. No synthetic junk records are written to the database.
-- **Scoped Read Model**: The Operational Dashboard derives intervention metrics from targeted queries scoped to active classes and current-week operational records.
+- **Scoped Read Model**: The Operational Dashboard derives intervention metrics from targeted queries scoped to active classes and current-week operational records, refreshed automatically on Home resume.
 - **Headless Build Capability**: Build configuration conditionally checks for `google-services.json`. The codebase compiles and all unit tests pass headlessly without requiring Firebase credentials.
 
 ---
@@ -120,7 +122,7 @@ OPERATIONAL DASHBOARD (Derived View Model)
 
 - **Platform**: Android SDK (API 24 to 37 / Android 7.0 to Android 15)
 - **Language**: Java 17
-- **UI Architecture**: Android View Binding, Material Design 3 Components (`com.google.android.material`), AndroidX
+- **UI Architecture**: Android Views/XML, Material Design 3 Components (`com.google.android.material`), AndroidX
 - **Backend Services**:
   - Firebase Authentication (`com.google.firebase:firebase-auth:24.2.0`) — Email/Password
   - Cloud Firestore (`com.google.firebase:firebase-firestore:26.6.0`)
@@ -131,9 +133,13 @@ OPERATIONAL DASHBOARD (Derived View Model)
 
 ## 8. Testing
 
-The project includes unit test coverage across data mapping, entity models, domain invariants, and assessment calculations.
+The project includes verified automated and manual test suites:
+- **30 Unit Tests Passing**: Comprehensive unit tests covering data mapping, validation invariants, domain transactions, and assessment scoring logic.
+- **`assembleDebug` Passed**: Debug APK compiles and builds cleanly without warnings or errors.
+- **`lintDebug` Passed**: 0 Android lint errors.
+- **Human Smoke Test Passed**: Full Batch 6 human runtime acceptance testing verified on Android 15 emulator.
 
-To execute the test suite:
+To execute the unit test suite:
 
 ```bash
 # Windows
@@ -152,17 +158,17 @@ To execute the test suite:
 ### Operational Dashboard & Class Tracking
 | Operational Dashboard | Class Cohort Roster |
 |:---:|:---:|
-| <img src="screenshots/01_dashboard.png" width="280" alt="Operational Dashboard" /><br><sub>**Home Dashboard**: Priority intervention triage and active class summaries.</sub> | <img src="screenshots/02_class_detail.png" width="280" alt="Class Cohort Roster" /><br><sub>**Class Detail**: Current week pacing pointer and curriculum module timeline.</sub> |
+| <img src="screenshots/01_dashboard.png" width="280" alt="Operational Dashboard" /><br><sub>**Home Dashboard**: Active classes overview and healthy operational state alert.</sub> | <img src="screenshots/02_class_detail.png" width="280" alt="Class Cohort Roster" /><br><sub>**Class Detail**: Current week pacing pointer and curriculum week list.</sub> |
 
 ### Weekly Progress & Student Learning Path
 | Weekly Student Progress | Student Profile & Multi-Enrollment |
 |:---:|:---:|
-| <img src="screenshots/03_weekly_progress.png" width="280" alt="Weekly Student Progress" /><br><sub>**Weekly Progress**: Cohort progress checkpointing with status chips and blocker notes.</sub> | <img src="screenshots/04_student_detail.png" width="280" alt="Student Profile" /><br><sub>**Student Detail**: Multi-enrollment learning path, active context, and assessment overview.</sub> |
+| <img src="screenshots/03_weekly_progress.png" width="280" alt="Weekly Student Progress" /><br><sub>**Weekly Progress**: Week 5 student list with a student marked in Needs Attention state.</sub> | <img src="screenshots/04_student_detail.png" width="280" alt="Student Profile" /><br><sub>**Student Detail**: Multi-enrollment learning path, active context, and assessment overview.</sub> |
 
 ### Competency Assessment & Studio Projects
-| SS1 Competency Assessment | Studio Projects & Teams |
+| SS1 Competency Assessment | Studio Projects Workspace |
 |:---:|:---:|
-| <img src="screenshots/05_assessment.png" width="280" alt="Competency Assessment" /><br><sub>**SS1 Assessment**: Five-domain competency radar chart, criterion scoring, and qualitative feedback.</sub> | <img src="screenshots/06_project_detail.png" width="280" alt="Studio Projects" /><br><sub>**Projects**: Team workspace, deliverable milestone filters, and overall progress health.</sub> |
+| <img src="screenshots/05_assessment.png" width="280" alt="Competency Assessment" /><br><sub>**SS1 Assessment**: Five-domain competency radar chart, criterion scores, and key strength note.</sub> | <img src="screenshots/06_project_detail.png" width="280" alt="Projects Tab" /><br><sub>**Projects Workspace**: Projects tab showing active filter chips, search input, and empty state guidance.</sub> |
 
 ---
 
@@ -216,9 +222,9 @@ To run ClassFlow against a live backend:
 
 ## 12. Project Status
 
-- **Version**: `v1.0.0`
-- **Application Core**: Complete, verified, and closed across all 8 development batches.
-- **Verification**: Zero lint errors, all 30 unit tests passing, build successful.
+- **Baseline Status**: Core v1 functionality is complete and closed across all 8 development batches.
+- **Release State**: Development baseline established; repository is currently private and un-tagged.
+- **Verification Summary**: Zero lint errors, 30 unit tests passing, clean debug build, human runtime acceptance passed.
 
 ---
 
