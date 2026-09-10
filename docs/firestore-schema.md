@@ -66,7 +66,7 @@ Permanent student profile records.
 - **Persisted Fields**:
   - `studentId` (string, required): Matches document ID
   - `name` (string, required): Full official student name
-  - `nickname` (string, required): Preferred nickname used during studio instruction
+  - `nickname` (string): Optional preferred name; stored as a string and may be empty. Maximum 40 characters.
   - `active` (boolean, required): Whether student is currently active in the academy
   - `createdAt` (timestamp, required): Record creation timestamp
   - `updatedAt` (timestamp, required): Last modification timestamp
@@ -90,7 +90,7 @@ Associates a Student with a specific Class offering and hosts their competency a
     - `criteria` (map, required if assessed): Map of 15 criterion IDs to integer scores (`1` through `4`) or `"NOT_OBSERVED"`
     - `strength` (string, optional): Qualitative narrative on strong competencies
     - `nextStep` (string, optional): Qualitative guidance on priority areas for growth
-    - `updatedAt` (timestamp, optional): Assessment timestamp
+    - `updatedAt` (timestamp, required if assessed): Server timestamp written on save
 
 > **Runtime-Only Fields**: Overall score and performance level are calculated dynamically at runtime by `AssessmentCalculator` and are not persisted.
 
@@ -108,7 +108,7 @@ Weekly individual student progress checkpoints.
   - `studentId` (string, required): Foreign key to `students`
   - `weekId` (string, required): Pacing week identifier (e.g., `"W05"`)
   - `weekNumber` (number, required): Calendar week index (`1` to `10`)
-  - `metrics` (map, optional): Key-value map of track-specific metrics defined by `ProgressMetricSchema`
+  - `metrics` (map, required): Key-value map of track-specific metrics; the key set must exactly match `ProgressMetricSchema` for the selected Track/Week.
   - `overallStatus` (string, required): Status (`"NOT_STARTED"`, `"ON_TRACK"`, `"NEEDS_ATTENTION"`, `"BLOCKED"`, `"COMPLETED"`)
   - `blocker` (string, optional): Description of blocker (mandatory if `overallStatus` is `"BLOCKED"`)
   - `teacherNote` (string, optional): Instructional feedback note (maximum 500 characters)
@@ -148,7 +148,7 @@ Weekly milestone deliverable evaluations for project teams.
   - `trackId` (string, required): Foreign key to `tracks`
   - `weekId` (string, required): Milestone week identifier (e.g., `"W09"`)
   - `weekNumber` (number, required): Milestone week index (`1` to `10`)
-  - `metrics` (map, optional): Milestone checklist map
+  - `metrics` (map, required): Key-value map of milestone metrics; the key set must exactly match `ProgressMetricSchema` for the selected Track/Week.
   - `overallStatus` (string, required): Milestone health (`"NOT_STARTED"`, `"ON_TRACK"`, `"NEEDS_ATTENTION"`, `"BLOCKED"`, `"COMPLETED"`)
   - `blocker` (string, optional): Description of blocker (mandatory if `overallStatus` is `"BLOCKED"`)
   - `teacherNote` (string, optional): Evaluator guidance note (maximum 500 characters)

@@ -40,7 +40,7 @@ HOME (Operational Dashboard)
 
 ### 3. Student Progress vs. Project Progress
 - **StudentProgress** (`studentProgress`): Evaluates weekly individual student progress using the dynamic metric schema for that Track/Week. Document IDs follow `{classId}_{studentId}_{weekId}` (e.g., `2026_SS1_A_ST_002_W05`). Status options include `NOT_STARTED`, `ON_TRACK`, `NEEDS_ATTENTION`, `BLOCKED`, and `COMPLETED`.
-- **ProjectProgress** (`projectProgress`): Evaluates weekly team deliverable progress using the milestone metric schema for that Track/Week. Document IDs follow `{projectId}_{weekId}` (e.g., `proj_auto123_W09`).
+- **ProjectProgress** (`projectProgress`): Evaluates weekly team deliverable progress using the dynamic metric schema for that Track/Week. Document IDs follow `{projectId}_{weekId}` (e.g., `proj_auto123_W09`).
 
 ### 4. Competency Assessment
 - The **Assessment** record evaluates 15 criteria across 5 engineering domains for the SS1 curriculum.
@@ -52,7 +52,7 @@ HOME (Operational Dashboard)
 ## Key Engineering Decisions & Operational Rules
 
 ### 1. Transaction-Guarded Writes
-All critical state mutations utilize Cloud Firestore transactions (`runTransaction`):
+Invariant-sensitive write paths use Cloud Firestore transactions (`runTransaction`), including class current-week changes, Enrollment status changes, Student Progress saves, Assessment saves, and Project Progress current-week synchronization:
 - **Class Week Advancement**: Validates track bounds before updating `currentWeek`.
 - **Enrollment Status Changes**: Enforces valid lifecycle transitions (`ACTIVE`, `COMPLETED`, `WITHDRAWN`, `ARCHIVED`).
 - **Student Progress**: Ensures active enrollment exists and validates that `blocker` descriptions accompany any `BLOCKED` status.
